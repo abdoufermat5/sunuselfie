@@ -55,8 +55,7 @@ def fetch_images(hashtags, count, start_date, end_date):
     hashtags = " OR ".join(hashtags.split())
     # query that fetches tweets with media or images from the given date range
     queries = f"{hashtags} -filter:retweets filter:media"
-    tweets = tweepy.Cursor(api.search_tweets, q=queries, tweet_mode="extended", since=start_date, until=end_date).items(
-        count)
+    tweets = tweepy.Cursor(api.search_tweets, q=queries, tweet_mode="extended", since=start_date, until=end_date, include_entities=True).items(count)
 
     images_by_hour = defaultdict(list)
     user_image_count = defaultdict(int)
