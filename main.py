@@ -53,7 +53,6 @@ def fetch_images(hashtags, count, start_date, end_date):
     # split hashtags by space and join with OR
 
     hashtags = " OR ".join(hashtags.split())
-    print("Hashtags:", hashtags)
     # query that fetches tweets with media or images from the given date range
     queries = f"{hashtags} -filter:retweets filter:media"
     tweets = tweepy.Cursor(api.search_tweets, q=queries, tweet_mode="extended", since=start_date, until=end_date).items(
@@ -64,11 +63,9 @@ def fetch_images(hashtags, count, start_date, end_date):
 
     for tweet in tweets:
         if 'media' in tweet.entities:
-            print("Tweet:", tweet.full_text)
             for media in tweet.entities['media']:
                 # Add a new condition to handle video media types
                 if media['type'] == 'video' or media['type'] == 'animated_gif':
-                    # Get the video URL with the highest bitrate
                     video_info = media['video_info']
                     video_variants = video_info['variants']
                     max_bitrate = -1
@@ -78,13 +75,10 @@ def fetch_images(hashtags, count, start_date, end_date):
                             max_bitrate = variant['bitrate']
                             video_url = variant['url']
 
-                    # Add the video URL to the results
                     if video_url:
-                        tweet_hour = tweet['created_at']
-                        tweet_hour = datetime.strptime(tweet_hour, '%a %b %d %H:%M:%S +0000 %Y').strftime(
-                            '%Y-%m-%d %H:00')
+                        tweet_hour = tweet.created_at.strftime('%Y-%m-%d %H:00')
                         images_by_hour[tweet_hour].append(
-                            {'video_url': video_url, 'user': tweet['user']['screen_name']})
+                            {'video_url': video_url, 'user': tweet.user.screen_name})
 
                 elif media['type'] == 'photo':
                     img_url = media['media_url_https']
@@ -124,6 +118,7 @@ def display_images(images_by_hour):
                     img = img_data['image']
                     st.image(img, use_column_width=True, caption=f"{user}")
                 elif 'video_url' in img_data:
+                    print("VIDEOOOOOOOOOOOOOOO")
                     video_url = img_data['video_url']
                     st.video(video_url, caption=f"{user}")
 
