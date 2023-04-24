@@ -17,7 +17,7 @@ then run the following commands:
 # create conda environment from environment.yml
 conda env create -f environment.yml
 # activate conda environment
-conda activate sunuselfie
+conda activate sunuselfie-2
 # run the app
 streamlit run main.py
 ```
