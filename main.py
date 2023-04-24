@@ -47,18 +47,26 @@ def detect_gender(image):
     return woman_detected
 
 
-def fetch_images(hashtags, count, start_date, end_date):
+def fetch_images(hashtags, count, start_date, end_date, username=None):
     end_date = end_date + timedelta(days=1)  # Include tweets from the end_date
 
     # split hashtags by space and join with OR
-
-    hashtags = " OR ".join(hashtags.split())
+    if len(hashtags.split()) > 1:
+        hashtags = " OR ".join(hashtags.split())
     # query that fetches tweets with media or images from the given date range
-    queries = f"{hashtags} -filter:retweets filter:media"
-    tweets = tweepy.Cursor(api.search_tweets, q=queries, tweet_mode="extended", since=start_date, until=end_date, include_entities=True).items(count)
+    # Include the user's screen name in the query if specified
+    if username:
+        queries = f"{hashtags} -filter:retweets filter:media from:{username}"
+    else:
+        queries = f"{hashtags} -filter:retweets filter:images filter:videos"
+
+    tweets = tweepy.Cursor(api.search_tweets,
+                           q=queries,
+                           tweet_mode="extended",
+                           until=end_date,
+                           include_entities=True).items(count)
 
     images_by_hour = defaultdict(list)
-    user_image_count = defaultdict(int)
 
     for tweet in tweets:
         if 'media' in tweet.entities:
@@ -99,9 +107,6 @@ def fetch_images(hashtags, count, start_date, end_date):
                         images_by_hour[tweet_hour].append(
                             {'image': img_content, 'user': tweet.user.screen_name, 'gender': gender})
 
-                    # Increment the count of images fetched for the user
-                    user_image_count[tweet.user.screen_name] += 1
-
     return images_by_hour
 
 
@@ -122,20 +127,55 @@ def display_images(images_by_hour):
                     st.video(video_url, caption=f"{user}")
 
 
-def main():
-    hashtag = st.text_input("Enter the hashtag to fetch images:", "#sunuselfiekorite #sunukorite #sunuselfiekorite2023")
-    fetch_count = st.number_input("Number of tweets to fetch:", min_value=10, max_value=500, value=10, step=10)
-    start_date = st.date_input("Select the start date for tweets:", datetime.now() - timedelta(days=7))
-    end_date = st.date_input("Select the end date for tweets:", datetime.now())
+def general_tab(fetched_data):
+    hashtag = st.text_input("Enter the hashtag to fetch images:", "#sunuselfiekorite2023")
+    fetch_count = st.number_input("Number of tweets to fetch:", min_value=10, max_value=5000, value=100, step=10)
+    cols = st.columns(2)
+    with cols[0]:
+        start_date = st.date_input("Select the start date for tweets:", datetime.now() - timedelta(days=7))
+    with cols[1]:
+        end_date = st.date_input("Select the end date for tweets:", datetime.now())
+
     if st.button("Fetch Images"):
-        # loader
-        with st.spinner("Fetching images..."):
-            images_by_hour = fetch_images(hashtag, fetch_count, start_date, end_date)
-            display_images(images_by_hour)
-    else:
-        st.write("Enter a hashtag and click 'Fetch Images' to display images.")
+        fetched_data.update(fetch_images(hashtag, fetch_count, start_date, end_date))
+        display_images(fetched_data)
+
+    return fetched_data
+
+
+def by_user_tab(fetched_data):
+    st.markdown("## User specific images and videos")
+    user_input = st.text_input("Enter the user's screen name:")
+    hashtag_input = st.text_input("Enter the hashtags to fetch images from the user:",
+                                  "#sunuselfiekorite2023")
+    fetch_count = st.number_input("Number of tweets to fetch for the user:", min_value=10, max_value=5000, value=100,
+                                  step=10)
+
+    cols = st.columns(2)
+    with cols[0]:
+        start_date = st.date_input("Select the start date for tweets:", datetime.now() - timedelta(days=7))
+    with cols[1]:
+        end_date = st.date_input("Select the end date for tweets:", datetime.now())
+
+    if user_input and hashtag_input:
+        if st.button("Fetch Images for User"):
+            fetched_data.update(fetch_images(hashtag_input, fetch_count, start_date, end_date, username=user_input))
+            display_images(fetched_data)
+        else:
+            display_images({k: v for k, v in fetched_data.items() if v['user'].lower() == user_input.lower()})
+
+
+def main():
+    st.set_page_config(page_title="Twitter Image Fetcher", layout="wide", initial_sidebar_state="expanded")
+
+    st.sidebar.title("Options")
+    tab = st.sidebar.radio("Go to", ["General", "By User"])
+    fetched_data = {}
+    if tab == "General":
+        fetched_data = general_tab(fetched_data)
+    elif tab == "By User":
+        by_user_tab(fetched_data)
 
 
 if __name__ == "__main__":
-    st.set_page_config(page_title="Twitter Image Fetcher", layout="wide", initial_sidebar_state="collapsed")
     main()
