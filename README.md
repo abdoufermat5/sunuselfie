@@ -19,7 +19,7 @@ conda env create -f environment.yml
 # activate conda environment
 conda activate sunuselfie-2
 # run the app
-streamlit run main.py
+streamlit run app.py
 ```
 
 if error occurs it's probably the dlib package, try to install it manually with `conda install -c conda-forge dlib`
