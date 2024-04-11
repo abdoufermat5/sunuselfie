@@ -5,7 +5,7 @@
 **Install dependencies**
 
 ```bash
-pip install streamlit git+https://github.com/vladkens/twscrape.git opencv-python deepface 
+pip install tensorflow keras streamlit git+https://github.com/vladkens/twscrape.git opencv-python deepface 
 ```
 
 **Run the app**
@@ -15,6 +15,14 @@ streamlit run app.py
 ```
 
 You should log in with your twitter account to use the app.
+
+## ERROR CASES
+
+If you get an error after running the app, you can try the following:
+
+```bash
+sudo apt-get install libgl1-mesa-glx
+```
 
 ## IMPORTANT
 
