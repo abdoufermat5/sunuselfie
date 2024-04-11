@@ -2,24 +2,24 @@
 
 ## Start
 
-create a .env file with the following content:
+**Install dependencies**
 
 ```bash
-CONSUMER_KEY=your_twitter_consumer_key
-CONSUMER_SECRET=your_twitter_consumer_secret
-ACCESS_TOKEN=your_twitter_access_token
-ACCESS_TOKEN_SECRET=your_twitter_access_token_secret
+pip install -r requirements.txt
 ```
 
-then run the following commands:
+**Run the app**
 
 ```bash
-# create conda environment from environment.yml
-conda env create -f environment.yml
-# activate conda environment
-conda activate sunuselfie-2
-# run the app
 streamlit run app.py
 ```
 
-if error occurs it's probably the dlib package, try to install it manually with `conda install -c conda-forge dlib`
+You should log in with your twitter account to use the app.
+
+## IMPORTANT
+
+I am not responsible for any misuse of this app. This app is for educational/GUINZZ purposes only. 
+
+WA SALAM
+
+And by the way, I am not saving any data. I am not interested in your data. I am not interested in your selfies. I am not interested in your tweets. I am not interested in your likes. I am not interested in your retweets. I am not interested in your followers. I am not interested in your followings. I am not interested in your profile picture. I am not interested in your banner. I am not interested in your bio. I am not interested in your location. I am not interested in your website. I am not interested in your date of birth. I am not interested in your email. I am not interested in your phone number.
