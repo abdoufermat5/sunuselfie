@@ -9,7 +9,7 @@ tasks:
     command: |
       python3 -m venv venv
       source venv/bin/activate
-      pip install -r requirements.txt
+      pip install streamlit git+https://github.com/vladkens/twscrape.git opencv-python deepface
   - name: run
     command: streamlit run app.py
 

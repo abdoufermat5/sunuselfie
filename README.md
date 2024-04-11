@@ -5,7 +5,7 @@
 **Install dependencies**
 
 ```bash
-pip install -r requirements.txt
+pip install streamlit git+https://github.com/vladkens/twscrape.git opencv-python deepface 
 ```
 
 **Run the app**
