@@ -29,7 +29,8 @@ async def login(username="", password="", email="", email_password=""):
     api = getAPI()  # or API("path-to.db") - default is `accounts.db`
 
     await api.pool.add_account(username, password, email, email_password)
-    c = await api.pool.login_all()
+    c = await api.pool.login(username)
+    print(c)
     if c["success"]==0:
         # try relogin
         await api.pool.relogin(username)

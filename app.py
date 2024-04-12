@@ -34,6 +34,8 @@ async def main():
         st.session_state["password"] = password
         st.session_state["username"] = username
 
+        getAPI()
+
         # Display giant image in the center
         st.image(
             "https://vignette.wikia.nocookie.net/naruto/images/2/21/Profile_Jiraiya.PNG/revision/latest?cb=20160115173538",

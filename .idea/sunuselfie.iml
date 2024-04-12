@@ -6,7 +6,7 @@
       <excludeFolder url="file://$MODULE_DIR$/CodeBro" />
       <excludeFolder url="file://$MODULE_DIR$/sunuselfie-env" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.10 (sunuselfie)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.12 (sunuselfie)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
