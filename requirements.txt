@@ -3,6 +3,5 @@ pandas
 tensorflow
 keras
 deepface
-git+https://github.com/vladkens/twscrape.git
 python-dotenv
 tf-keras

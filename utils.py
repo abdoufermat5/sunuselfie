@@ -10,9 +10,9 @@ import math
 from detect_face import detect_faces
 
 
-def getAPI():
+def getAPI(db="accounts.db"):
     # delete the `path-to.db` if you want to use the default `accounts.db`
-    return API()
+    return API(db)
 
 
 def check_credentials_on_os():
@@ -26,11 +26,10 @@ def check_credentials_on_os():
 
 
 async def login(username="", password="", email="", email_password=""):
-    api = getAPI()  # or API("path-to.db") - default is `accounts.db`
+    api = getAPI(db=username+".db")  # or API("path-to.db") - default is `accounts.db`
 
     await api.pool.add_account(username, password, email, email_password)
-    c = await api.pool.login(username)
-    print(c)
+    c = await api.pool.login_all()
     if c["success"]==0:
         # try relogin
         await api.pool.relogin(username)

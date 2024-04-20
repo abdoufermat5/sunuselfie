@@ -1,5 +1,6 @@
-FROM python:3.10-bookworm
-LABEL authors="asadiakhou"
+FROM continuumio/miniconda3
+LABEL authors="abdoufermat"
+MAINTAINER AbdouFermat
 
 # Set environment variables
 # Prevents Python from writing pyc files to disc (equivalent to python -B option)
@@ -15,10 +16,8 @@ WORKDIR /app
 
 # Install dependencies
 COPY ./requirements.txt /app/requirements.txt
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt --no-cache-dir \
-    --trusted-host pypi.python.org --trusted-host pypi.org\
-    --trusted-host=files.pythonhosted.org
+RUN pip install git+https://github.com/vladkens/twscrape.git
+RUN conda install -c conda-forge --file /app/requirements.txt
 
 # Copy project
 COPY . /app/
